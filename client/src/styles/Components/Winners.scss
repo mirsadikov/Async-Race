@@ -1,0 +1,97 @@
+.winners {
+  padding: 2rem 0;
+
+  &__title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+
+    th {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: left;
+      padding: 1rem;
+      border-bottom: 1px solid #eaeaea;
+      user-select: none;
+    }
+
+    th,
+    td {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    tbody tr {
+      height: 7rem;
+      &:nth-child(odd) {
+        background-color: #eaeaea;
+      }
+    }
+
+    td {
+      font-size: 1.4rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eaeaea;
+    }
+  }
+
+  &__id {
+    width: 7%;
+    cursor: pointer;
+  }
+
+  &__img {
+    width: 12%;
+  }
+
+  &__wins {
+    width: 10%;
+    cursor: pointer;
+  }
+
+  &__time {
+    width: 10%;
+    cursor: pointer;
+  }
+}
+
+.asc,
+.desc {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 0.7rem solid transparent;
+    border-right: 0.7rem solid transparent;
+  }
+}
+
+.desc {
+  background-color: #ff000050;
+
+  &::after {
+    border-top: 0.7rem solid #000;
+  }
+}
+
+.asc {
+  background-color: #00ff0050;
+
+  &::after {
+    border-bottom: 0.7rem solid #000;
+  }
+}
