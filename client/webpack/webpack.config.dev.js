@@ -4,13 +4,16 @@ const { merge } = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const common = require('./webpack.common.js');
+const path = require('path');
 
 module.exports = merge(common, {
   target: 'web',
   mode: 'development',
-  devtool: 'eval-cheap-source-map',
+  devtool: 'source-map',
   output: {
     chunkFilename: 'js/[name].chunk.js',
+    path: path.join(__dirname, '/static/js-build'),
+    devtoolModuleFilenameTemplate: 'file:///[absolute-resource-path]',
   },
   devServer: {
     client: {

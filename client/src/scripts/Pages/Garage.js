@@ -155,7 +155,9 @@ const garage = {
 
     if (existingWinner.id) {
       existingWinner.wins += 1;
-      existingWinner.time = winner.time < existingWinner.time ? winner.time : existingWinner.time;
+      existingWinner.time = parseFloat(winner.time) < parseFloat(existingWinner.time)
+        ? winner.time
+        : existingWinner.time;
       await updateWinner(existingWinner);
     } else {
       await createWinner({ id: winner.car.id, wins: 1, time: winner.time });

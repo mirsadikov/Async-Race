@@ -119,14 +119,14 @@ export default class CarLine {
 
     if (this.startEngine && !this.engineStatus) await this.startEngine;
 
-    const { error: errorStatus } = await this.engineStatus;
+    const { error: errorStatus, result: resultStatus } = await this.engineStatus;
 
     this.engineStatus = null;
     this.startEngine = null;
     this.deleteBtn.disabled = false;
     this.editBtn.disabled = false;
 
-    if (errorStatus) {
+    if (errorStatus || resultStatus === 'stopped') {
       this.animation.pause();
       return Promise.reject(errorStatus);
     }

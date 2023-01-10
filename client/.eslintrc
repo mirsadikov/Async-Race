@@ -7,7 +7,8 @@
     "no-shadow": "off",
     "prefer-const": "off",
     "no-param-reassign": "off",
-    "no-alert": "off"
+    "no-alert": "off",
+    "no-console": "off"
   },
   "env": {
     "browser": true,

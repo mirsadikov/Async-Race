@@ -32,7 +32,9 @@ export const engineStatus = async (id) => {
       method: 'PATCH',
     });
 
-    const result = await response.json();
+    let result;
+    if (response.status === 200) result = await response.json();
+    else result = 'stopped';
 
     return { result };
   } catch (error) {
