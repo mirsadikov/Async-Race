@@ -38,7 +38,7 @@ const header = {
     }
   },
 
-  renderPage(page) {
+  reRenderPage(page) {
     if (page === 'winners') {
       winners.renderContent();
     }
@@ -47,7 +47,7 @@ const header = {
   onButtonClick(event) {
     const { page } = event.target.dataset;
     this.showPage(page);
-    this.renderPage(page);
+    this.reRenderPage(page);
   },
 };
 

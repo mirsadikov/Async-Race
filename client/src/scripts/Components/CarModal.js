@@ -6,6 +6,7 @@ export default class CarModal {
     this.name = name || null;
     this.color = color || null;
     this.modal = null;
+    this.onSubmit = null;
   }
 
   render() {
@@ -19,7 +20,9 @@ export default class CarModal {
       <div class="modal__form">
         <input class="modal__input input" type="text" id="form-name" placeholder="Car name" />
         <input class="modal__input input--color" id="form-color" type="color" />
-        <button class="modal__button button modal__button--submit" id="form-submit" type="button">${this.id ? 'Update' : 'Create'}</button>
+        <button class="modal__button button modal__button--submit" id="form-submit" type="button">
+          ${this.id ? 'Update' : 'Create'}
+        </button>
         <button class="modal__button button" id="form-cancel" type="button">Cancel</button>
       </div>
     </div>
@@ -27,12 +30,12 @@ export default class CarModal {
 
     this.modal = modal;
     body.insertAdjacentElement('beforeend', modal);
+    this.nameInput = document.getElementById('form-name');
+    this.colorInput = document.getElementById('form-color');
 
     if (this.name && this.color) {
-      const nameInput = document.getElementById('form-name');
-      const colorInput = document.getElementById('form-color');
-      nameInput.value = this.name;
-      colorInput.value = this.color;
+      this.nameInput.value = this.name;
+      this.colorInput.value = this.color;
     }
   }
 
@@ -66,13 +69,9 @@ export default class CarModal {
   }
 
   async submit() {
-    const name = document.getElementById('form-name').value;
-    const color = document.getElementById('form-color').value;
-    if (this.id) {
-      await this.onUpdate(name, color);
-    } else {
-      await this.onCreate(name, color);
-    }
+    const name = this.nameInput.value;
+    const color = this.colorInput.value;
+    await this.onSubmit(name, color);
   }
 
   async init() {

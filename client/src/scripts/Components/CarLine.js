@@ -43,19 +43,19 @@ export default class CarLine {
     carElement.insertAdjacentHTML('beforeend', carLineTemplate);
     this.element = carElement;
     this.parent.append(this.element);
+
+    this.editBtn = this.element.querySelector('.buttonEdit');
+    this.deleteBtn = this.element.querySelector('.buttonDelete');
+    this.startBtn = this.element.querySelector('.buttonStart');
+    this.stopBtn = this.element.querySelector('.buttonEnd');
+    this.carImg = this.element.querySelector('.car__img');
+    this.line = this.element.querySelector('.car__container');
   }
 
   bindEvents() {
-    const editBtn = this.element.querySelector('.buttonEdit');
-    const deleteBtn = this.element.querySelector('.buttonDelete');
-    const startBtn = this.element.querySelector('.buttonStart');
-    const stopBtn = this.element.querySelector('.buttonEnd');
-
-    editBtn.addEventListener('click', () => {
+    this.editBtn.addEventListener('click', () => {
       const carModal = new CarModal(this.car.id, this.car.name, this.car.color);
-      carModal.init();
-
-      carModal.onUpdate = async (name, color) => {
+      carModal.onSubmit = async (name, color) => {
         const { error } = await updateCar(this.car.id, name, color);
 
         if (error) {
@@ -65,9 +65,11 @@ export default class CarLine {
 
         this.renderParent();
       };
+
+      carModal.init();
     });
 
-    deleteBtn.addEventListener('click', async () => {
+    this.deleteBtn.addEventListener('click', async () => {
       const { error } = await deleteCar(this.car.id);
 
       if (error) {
@@ -78,67 +80,62 @@ export default class CarLine {
       this.renderParent();
     });
 
-    startBtn.addEventListener('click', async () => {
+    this.startBtn.addEventListener('click', async () => {
       try {
         await this.drive();
       } catch (error) {
-        this.animation.pause();
+        this.animation?.pause();
       }
     });
 
-    stopBtn.addEventListener('click', async () => {
+    this.stopBtn.addEventListener('click', async () => {
       await this.stop();
     });
   }
 
   async drive() {
-    const startBtn = this.element.querySelector('.buttonStart');
-    const stopBtn = this.element.querySelector('.buttonEnd');
+    if (!this.engineStatus && !this.animation && !this.startEngine) {
+      this.time = 0;
+      this.startBtn.disabled = true;
+      this.deleteBtn.disabled = true;
+      this.editBtn.disabled = true;
+      this.startEngine = startEngine(this.car.id);
 
-    const {
-      error,
-      result: { velocity, distance },
-    } = await startEngine(this.car.id);
+      const {
+        error,
+        result: { velocity, distance },
+      } = await this.startEngine;
 
-    if (error) {
-      alert(error);
-      return Promise.reject(error);
+      this.animate(velocity, distance);
+
+      if (error) {
+        alert(error);
+        return Promise.reject(error);
+      }
+
+      this.stopBtn.disabled = false;
+      this.engineStatus = engineStatus(this.car.id);
     }
 
-    const carImg = this.element.querySelector('.car__img');
-    const line = this.element.querySelector('.car__container').clientWidth;
-    const time = distance / velocity; // in ms
+    if (this.startEngine && !this.engineStatus) await this.startEngine;
 
-    // disable buttons
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
+    const { error: errorStatus } = await this.engineStatus;
 
-    this.animation = carImg.animate(
-      [
-        {
-          transform: `translateX(${line}px)`,
-        },
-      ],
-      {
-        duration: time,
-        fill: 'forwards',
-      },
-    );
-
-    const { error: errorStatus } = await engineStatus(this.car.id);
+    this.engineStatus = null;
+    this.startEngine = null;
+    this.deleteBtn.disabled = false;
+    this.editBtn.disabled = false;
 
     if (errorStatus) {
       this.animation.pause();
       return Promise.reject(errorStatus);
     }
 
-    return Promise.resolve({ car: this.car, time: (time / 1000).toFixed(2) });
+    return Promise.resolve({ car: this.car, time: (this.time / 1000).toFixed(2) });
   }
 
   async stop() {
-    this.animation.pause();
-    const stopBtn = this.element.querySelector('.buttonEnd');
-    const startBtn = this.element.querySelector('.buttonStart');
+    this.animation?.pause();
 
     const { error } = await stopEngine(this.car.id);
 
@@ -147,9 +144,28 @@ export default class CarLine {
       return;
     }
 
-    this.animation.cancel();
+    this.animation?.cancel();
     this.animation = null;
-    stopBtn.disabled = true;
-    startBtn.disabled = false;
+    this.stopBtn.disabled = true;
+    this.startBtn.disabled = false;
+    this.editBtn.disabled = false;
+    this.engineStatus = null;
+    this.startEngine = null;
+  }
+
+  animate(velocity, distance) {
+    this.time = distance / velocity; // in ms
+
+    this.animation = this.carImg.animate(
+      [
+        {
+          transform: `translateX(${this.line.clientWidth}px)`,
+        },
+      ],
+      {
+        duration: this.time,
+        fill: 'forwards',
+      },
+    );
   }
 }

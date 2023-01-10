@@ -82,8 +82,76 @@ export const updateCar = async (id, name, color) => {
 };
 
 export const generateCars = async () => {
-  const brands = ['BMW', 'Audi', 'Mercedes', 'Volkswagen', 'Porsche', 'Ferrari', 'Lamborghini', 'Maserati', 'Bugatti', 'Ford'];
-  const models = ['X5', 'A6', 'S-class', 'Passat', '911', 'F40', 'Diablo', 'GranTurismo', 'Veyron', 'Mustang'];
+  const brands = [
+    'BMW',
+    'Audi',
+    'Mercedes',
+    'Volkswagen',
+    'Porsche',
+    'Ferrari',
+    'Lamborghini',
+    'Maserati',
+    'Bugatti',
+    'Ford',
+    'Chevrolet',
+    'Nissan',
+    'Toyota',
+    'Honda',
+    'Hyundai',
+    'Kia',
+    'Mazda',
+    'Mitsubishi',
+    'Subaru',
+    'Volvo',
+    'Opel',
+    'Dodge',
+    'Jeep',
+    'Cadillac',
+    'Lincoln',
+    'GMC',
+    'Infiniti',
+    'Lexus',
+    'Tesla',
+    'Alfa Romeo',
+    'Aston Martin',
+    'Bentley',
+    'Rolls-Royce',
+    'McLaren',
+    'Hummer',
+    'Jaguar',
+    'Land Rover',
+  ];
+  const models = [
+    'X5',
+    'A6',
+    'S-class',
+    'Passat',
+    '911',
+    'F40',
+    'Diablo',
+    'GranTurismo',
+    'Veyron',
+    'Mustang',
+    'Camaro',
+    'Skyline',
+    'Supra',
+    'Civic',
+    'Elantra',
+    'Rio',
+    'MX-5',
+    'Lancer',
+    'Impreza',
+    'S60',
+    'Astra',
+    'Charger',
+    'Grand Cherokee',
+    'Escalade',
+    'Navigator',
+    'Sierra',
+    'QX50',
+    'LS',
+    'Model S',
+  ];
   const cars = [];
 
   function randomColor() {
@@ -97,7 +165,9 @@ export const generateCars = async () => {
 
   for (let i = 0; i < 100; i += 1) {
     const car = {
-      name: `${brands[Math.floor(Math.random() * brands.length)]} ${models[Math.floor(Math.random() * models.length)]}`,
+      name: `${brands[Math.floor(Math.random() * brands.length)]} ${
+        models[Math.floor(Math.random() * models.length)]
+      }`,
       color: randomColor(),
     };
 

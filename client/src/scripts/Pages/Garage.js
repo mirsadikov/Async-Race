@@ -50,6 +50,13 @@ const garage = {
 </div>
     `;
 
+    this.garageTitle = document.querySelector('.garage__title');
+    this.carsListElement = document.querySelector('.garage__list');
+    this.addCarButton = document.getElementById('buttonCreate');
+    this.resetButton = document.getElementById('buttonReset');
+    this.generateCarsButton = document.getElementById('buttonGenerate');
+    this.raceButton = document.getElementById('buttonRace');
+
     await this.renderContent();
   },
 
@@ -65,76 +72,32 @@ const garage = {
       return;
     }
 
-    const garageTitle = document.querySelector('.garage__title');
-    garageTitle.textContent = `Garage: ${total}`;
+    this.garageTitle.textContent = `Garage: ${total}`;
 
     await this.renderCars();
-
     this.pagination?.update(this.total, this.page);
   },
 
   async renderCars() {
-    const carsListElement = document.querySelector('.garage__list');
-    carsListElement.innerHTML = '';
+    this.carsListElement.innerHTML = '';
 
     this.carsList.forEach(async (car) => {
-      const carLine = new CarLine(car, carsListElement, this.renderContent.bind(this));
+      const carLine = new CarLine(car, this.carsListElement, this.renderContent.bind(this));
       this.lines.push(carLine);
     });
   },
 
   bindEvents() {
-    const addCarButton = document.getElementById('buttonCreate');
-    const resetButton = document.getElementById('buttonReset');
-    const generateCarsButton = document.getElementById('buttonGenerate');
-    const raceButton = document.getElementById('buttonRace');
-
-    addCarButton.addEventListener('click', this.addCar.bind(this));
-    generateCarsButton.addEventListener('click', this.generateCars.bind(this));
-    raceButton.addEventListener('click', () => {
-      addCarButton.disabled = true;
-      generateCarsButton.disabled = true;
-      raceButton.disabled = true;
-      resetButton.disabled = true;
-
-      const race = this.lines.map((line) => line.drive());
-
-      Promise.any(race)
-        .then(async (winner) => {
-          winnerModal.show(winner);
-
-          const { result: existingWinner } = await getWinner(winner.car.id);
-
-          if (existingWinner.id) {
-            existingWinner.wins += 1;
-            existingWinner.time = winner.time < existingWinner.time
-              ? winner.time
-              : existingWinner.time;
-            await updateWinner(existingWinner);
-          } else {
-            await createWinner({ id: winner.car.id, wins: 1, time: winner.time });
-          }
-        })
-        .finally(() => {
-          resetButton.disabled = false;
-        });
-    });
-    resetButton.addEventListener('click', () => {
-      const reset = this.lines.map((line) => line.animation && line.stop());
-
-      Promise.all(reset).then(() => {
-        addCarButton.disabled = false;
-        generateCarsButton.disabled = false;
-        raceButton.disabled = false;
-      });
-    });
+    this.addCarButton.addEventListener('click', this.addCar.bind(this));
+    this.generateCarsButton.addEventListener('click', this.generateCars.bind(this));
+    this.resetButton.addEventListener('click', this.resetCars.bind(this));
+    this.raceButton.addEventListener('click', this.race.bind(this));
   },
 
   addCar() {
     const carModal = new CarModal();
-    carModal.init();
 
-    carModal.onCreate = async (name, color) => {
+    carModal.onSubmit = async (name, color) => {
       const { error } = await addCar(name, color);
 
       if (error) {
@@ -144,6 +107,8 @@ const garage = {
 
       this.renderContent();
     };
+
+    carModal.init();
   },
 
   async generateCars() {
@@ -155,6 +120,46 @@ const garage = {
     }
 
     this.renderContent();
+  },
+
+  async resetCars() {
+    const reset = this.lines.map((line) => line.animation && line.stop());
+
+    Promise.all(reset).then(() => {
+      this.addCarButton.disabled = false;
+      this.generateCarsButton.disabled = false;
+      this.raceButton.disabled = false;
+    });
+  },
+
+  race() {
+    this.addCarButton.disabled = true;
+    this.generateCarsButton.disabled = true;
+    this.raceButton.disabled = true;
+    this.resetButton.disabled = true;
+
+    const race = this.lines.map((line) => line.drive());
+
+    Promise.any(race)
+      .then(async (winner) => {
+        winnerModal.show(winner);
+        await this.updateOrCreateWinner(winner);
+      })
+      .finally(() => {
+        this.resetButton.disabled = false;
+      });
+  },
+
+  async updateOrCreateWinner(winner) {
+    const { result: existingWinner } = await getWinner(winner.car.id);
+
+    if (existingWinner.id) {
+      existingWinner.wins += 1;
+      existingWinner.time = winner.time < existingWinner.time ? winner.time : existingWinner.time;
+      await updateWinner(existingWinner);
+    } else {
+      await createWinner({ id: winner.car.id, wins: 1, time: winner.time });
+    }
   },
 };
 

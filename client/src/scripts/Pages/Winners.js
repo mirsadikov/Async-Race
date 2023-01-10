@@ -32,25 +32,28 @@ const winners = {
 
   async render() {
     winnersElement.innerHTML = `
-<div class="container">
-  <h2 class="winners__title">Winners: 0</h2>
-  <table class="winners__table">
-    <thead>
-      <tr>
-        <th class="winners__id">Id</th>
-        <th class="winners__img">Car</th>
-        <th class="winners__name">Name</th>
-        <th class="winners__wins">Wins</th>
-        <th class="winners__time">Time</th>
-      </tr>
-    </thead>
-    <tbody class="winners__list">
-    </tbody>
-  </table>
-  <div class="winners__pagination">
-  </div>
-</div>
+      <div class="container">
+        <h2 class="winners__title">Winners: 0</h2>
+        <table class="winners__table">
+          <thead>
+            <tr>
+              <th class="winners__id">Id</th>
+              <th class="winners__img">Car</th>
+              <th class="winners__name">Name</th>
+              <th class="winners__wins">Wins</th>
+              <th class="winners__time">Time</th>
+            </tr>
+          </thead>
+          <tbody class="winners__list">
+          </tbody>
+        </table>
+        <div class="winners__pagination">
+        </div>
+      </div>
     `;
+
+    this.winnerTitleEl = document.querySelector('.winners__title');
+    this.winnersListEl = document.querySelector('.winners__list');
 
     await this.renderContent();
   },
@@ -70,11 +73,10 @@ const winners = {
     this.total = total;
     this.winnersList = cars;
 
-    const winnerTitle = document.querySelector('.winners__title');
-    winnerTitle.textContent = `Winners: ${this.total}`;
+    this.winnerTitleEl.textContent = `Winners: ${this.total}`;
 
     const winnersTable = await this.renderWinnersTemplate();
-    winnersElement.querySelector('.winners__list').innerHTML = winnersTable;
+    this.winnersListEl.innerHTML = winnersTable;
 
     document.querySelector('.asc')?.classList.remove('asc');
     document.querySelector('.desc')?.classList.remove('desc');
@@ -82,7 +84,6 @@ const winners = {
       .querySelector(`.winners__${this.sort}`)
       .classList.add(this.order === 'ASC' ? 'asc' : 'desc');
 
-    // await this.renderWinners();
     this.pagination?.update(this.total, this.page);
   },
 
