@@ -1,2 +1,3 @@
 # mirsadikov-JSFEEN2022Q3
-Private repository for @mirsadikov
+
+https://mirsadikov-async-race.netlify.app/
