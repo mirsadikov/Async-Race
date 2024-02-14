@@ -5,7 +5,7 @@ export const addCar = async (name, color) => {
       color,
     };
 
-    const response = await fetch('http://localhost:3000/garage', {
+    const response = await fetch('https://async-race-m.vercel.app/garage', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const addCar = async (name, color) => {
 
 export const getCars = async (page, limit) => {
   try {
-    const response = await fetch(`http://localhost:3000/garage?_page=${page}&_limit=${limit}`);
+    const response = await fetch(`https://async-race-m.vercel.app/garage?_page=${page}&_limit=${limit}`);
     const result = await response.json();
 
     return { result, total: response.headers.get('X-Total-Count') };
@@ -34,7 +34,7 @@ export const getCars = async (page, limit) => {
 
 export const getCar = async (id) => {
   try {
-    const response = await fetch(`http://localhost:3000/garage/${id}`);
+    const response = await fetch(`https://async-race-m.vercel.app/garage/${id}`);
     const result = await response.json();
 
     return { result };
@@ -46,8 +46,8 @@ export const getCar = async (id) => {
 export const deleteCar = async (id) => {
   try {
     const deletePromises = [
-      fetch(`http://localhost:3000/garage/${id}`, { method: 'DELETE' }),
-      fetch(`http://localhost:3000/winners/${id}`, { method: 'DELETE' }),
+      fetch(`https://async-race-m.vercel.app/garage/${id}`, { method: 'DELETE' }),
+      fetch(`https://async-race-m.vercel.app/winners/${id}`, { method: 'DELETE' }),
     ];
 
     await Promise.all(deletePromises).catch((err) => alert(err));
@@ -65,7 +65,7 @@ export const updateCar = async (id, name, color) => {
       color,
     };
 
-    const response = await fetch(`http://localhost:3000/garage/${id}`, {
+    const response = await fetch(`https://async-race-m.vercel.app/garage/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
