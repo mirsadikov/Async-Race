@@ -1,6 +1,6 @@
 export const startEngine = async (id) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/engine?id=${id}&status=started`, {
+    const response = await fetch(`https://async-race-api.zeyds.me/engine?id=${id}&status=started`, {
       method: 'PATCH',
     });
 
@@ -14,7 +14,7 @@ export const startEngine = async (id) => {
 
 export const stopEngine = async (id) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/engine?id=${id}&status=stopped`, {
+    const response = await fetch(`https://async-race-api.zeyds.me/engine?id=${id}&status=stopped`, {
       method: 'PATCH',
     });
 
@@ -28,7 +28,7 @@ export const stopEngine = async (id) => {
 
 export const engineStatus = async (id) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/engine?id=${id}&status=drive`, {
+    const response = await fetch(`https://async-race-api.zeyds.me/engine?id=${id}&status=drive`, {
       method: 'PATCH',
     });
 

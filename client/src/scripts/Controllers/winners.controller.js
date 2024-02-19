@@ -1,6 +1,6 @@
 export const getWinners = async (page, limit, sort, order) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/winners?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`);
+    const response = await fetch(`https://async-race-api.zeyds.me/winners?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`);
     const result = await response.json();
 
     return { result, total: response.headers.get('X-Total-Count') };
@@ -11,7 +11,7 @@ export const getWinners = async (page, limit, sort, order) => {
 
 export const getWinner = async (id) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/winners/${id}`);
+    const response = await fetch(`https://async-race-api.zeyds.me/winners/${id}`);
     const result = await response.json();
 
     return { result };
@@ -22,7 +22,7 @@ export const getWinner = async (id) => {
 
 export const createWinner = async (winner) => {
   try {
-    const response = await fetch('https://async-race-m.vercel.app/winners', {
+    const response = await fetch('https://async-race-api.zeyds.me/winners', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export const createWinner = async (winner) => {
 
 export const updateWinner = async (winner) => {
   try {
-    const response = await fetch(`https://async-race-m.vercel.app/winners/${winner.id}`, {
+    const response = await fetch(`https://async-race-api.zeyds.me/winners/${winner.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
